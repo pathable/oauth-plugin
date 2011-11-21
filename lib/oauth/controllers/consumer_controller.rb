@@ -19,7 +19,8 @@ module Oauth
       def show
         unless @token
           if @consumer.ancestors.include?(Oauth2Token)
-            request_url = callback2_oauth_consumer_url(params[:id]) + '?' + request.query_string
+            request_url = callback2_oauth_consumer_url(params[:id])
+            request_url += "?#{request.query_string}" if request.query_string.present?
             redirect_to @consumer.authorize_url(request_url)
           else
             request_url = callback_oauth_consumer_url(params[:id]) + '?' + request.query_string
