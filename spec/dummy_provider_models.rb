@@ -20,14 +20,14 @@ class ClientApplication
 end
 
 class OauthToken
-  attr_accessor :token
+  attr_accessor :token, :refresh_token
 
-  def self.first(conditions_hash)
-    case conditions_hash[:conditions].last
+  def self.where(q, p)
+    case p
     when "not_authorized", "invalidated"
-      nil
+      []
     else
-      OauthToken.new(conditions_hash[:conditions].last)
+      [OauthToken.new(p)]
     end
   end
 
