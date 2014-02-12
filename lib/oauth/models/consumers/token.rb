@@ -51,10 +51,11 @@ module Oauth
             if access_token.class.ancestors.include?(Oauth2Token)
               token = access_token
             else
-              if user
-                token = self.find_or_initialize_by_user_id_and_token(user.id, access_token.token)
-              else
-                token = self.find_or_initialize_by_token(access_token.token)
+              attrs = { :token => access_token.token }
+              attrs[:user_id] = user.id if user
+              token = where(attrs).first
+              token ||= new do |token|
+                attrs.each{ |attr, value| token.send("#{attr}=".to_sym, value) }
               end
             end
 
